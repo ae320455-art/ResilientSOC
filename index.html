@@ -978,39 +978,39 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const contactForm = document.getElementById('contactForm');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // منع الإرسال العادي
+// الكود هيشتغل فوراً طالما محطوط في آخر الصفحة
+const contactForm = document.getElementById('contactForm');
 
-            const name = document.getElementById('fname').value;
-            const email = document.getElementById('femail').value;
-            const company = document.getElementById('fcompany').value;
-            const service = document.getElementById('fservice').value;
-            const message = document.getElementById('fmessage').value;
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // منع الإرسال العادي
 
-            // إرسال الإشعار لـ ntfy
-            fetch('https://ntfy.sh/res_soc_alerts', {
-                method: 'POST',
-                body: `الاسم: ${name}\nالبريد: ${email}\nالشركة: ${company}\nالخدمة: ${service}\nالرسالة: ${message}`
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('تم إرسال الرسالة والإشعار بنجاح!');
-                    contactForm.reset();
-                } else {
-                    alert('فشل إرسال الإشعار.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('حدث خطأ في الاتصال.');
-            });
+        // سحب البيانات
+        const name = document.getElementById('fname').value;
+        const email = document.getElementById('femail').value;
+        const company = document.getElementById('fcompany').value;
+        const service = document.getElementById('fservice').value;
+        const message = document.getElementById('fmessage').value;
+
+        // إرسال الإشعار لـ ntfy
+        fetch('https://ntfy.sh/res_soc_alerts', {
+            method: 'POST',
+            body: `الاسم: ${name}\nالبريد: ${email}\nالشركة: ${company}\nالخدمة: ${service}\nالرسالة: ${message}`
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('تم إرسال الإشعار لـ ntfy بنجاح!');
+                contactForm.reset();
+            } else {
+                alert('السيرفر رفض الطلب.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('حصل خطأ في الاتصال.');
         });
-    }
-});
+    });
+}
 </script>
 </body>
 </html>
