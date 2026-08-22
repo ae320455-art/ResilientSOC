@@ -924,34 +924,41 @@ s0.parentNode.insertBefore(s1,s0);
 
 <!-- كود البرمجة (JavaScript) -->
 <script>
-document.getElementById("contactForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("contactForm");
   
-  const senderName = document.getElementById("name").value;
-  const senderEmail = document.getElementById("email").value;
-  const messageBody = document.getElementById("message").value;
+  if (form) {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const senderName = document.getElementById("name").value;
+      const senderEmail = document.getElementById("email").value;
+      const messageBody = document.getElementById("message").value;
 
-  // إرسال الإشعار إلى الـ Topic الخاص بك عبر ntfy
-  fetch("https://ntfy.sh/res_soc_alerts", {
-    method: "POST",
-    body: `رسالة جديدة من: ${senderName} (${senderEmail})\n\nالنص: ${messageBody}`,
-    headers: {
-      "Title": "🚨 رسالة جديدة من موقع Resilient SOC",
-      "Priority": "high",
-      "Tags": "incoming_call,shield"
-    }
-  })
-  .then(response => {
-    if (response.ok) {
-      alert("تم إرسال الرسالة والإشعار بنجاح!");
-      document.getElementById("contactForm").reset();
-    } else {
-      alert("حدث خطأ أثناء الإرسال.");
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-  });
+      // إرسال الإشعار إلى الـ Topic الخاص بك عبر ntfy
+      fetch("https://ntfy.sh/res_soc_alerts", {
+        method: "POST",
+        body: `رسالة جديدة من: ${senderName} (${senderEmail})\n\nالنص: ${messageBody}`,
+        headers: {
+          "Title": "🚨 رسالة جديدة من موقع Resilient SOC",
+          "Priority": "high",
+          "Tags": "incoming_call,shield"
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("تم إرسال الرسالة والإشعار بنجاح!");
+          form.reset();
+        } else {
+          alert("حدث خطأ في الخادم: " + response.status);
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("فشل الإرسال! غالباً برنامج حجب الإعلانات (Ad-blocker) أو متصفحك يمنع الاتصال بـ ntfy.sh. جرب تعطيل مانع الإعلانات وحاول مرة أخرى.");
+      });
+    });
+  }
 });
 </script>
 </body>
