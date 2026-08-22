@@ -915,22 +915,30 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <script>
-document.querySelector('form').addEventListener('submit', function (e) {
-    e.preventDefault(); // بيمنع الصفحة تقفل أو تحول عشان الطلب يبعت براحته
+document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // منع إعادة تحميل الصفحة
 
-    const name = document.getElementById('fname').value;
-    const email = document.getElementById('femail').value;
+    const form = e.target;
+    
+    // قراءة القيم وتنظيفها
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
     const service = document.getElementById('fservice').value;
-    const message = document.getElementById('fmessage').value;
+    const message = document.getElementById('fmessage').value.trim();
 
-    // 1. إرسال الإشعار لتطبيق ntfy على موبايلك
-    fetch('https://ntfy.sh/res_soc_alerts', {
+    // 3. التحقق من الحقول (Validation) قبل الإرسال
+    if (!name || !email || !message) {
+        alert('من فضلك املأ الحقول المطلوبة (الاسم، البريد، والرسالة).');
+        return;
+    }
+
+    // 1. إرسال الإشعار لـ ntfy (باستخدام اسم سري وخاص بك وحدك لتجنب التجسس)
+    fetch('https://ntfy.sh/resilient_soc_secret_998877', {
         method: 'POST',
-        body: `رسالة جديدة من الموقع!\nالاسم: ${name}\nالإيميل: ${email}\nالخدمة: ${service}\nالرسالة: ${message}`
+        body: `🚨 رسالة جديدة من موقعك!\n👤 الاسم: ${name}\n📧 الإيميل: ${email}\n⚙️ الخدمة: ${service}\n💬 الرسالة: ${message}`
     }).catch(err => console.log('Ntfy error:', err));
 
-    // 2. إرسال البيانات لـ Formspree عشان البريد عندك
-    const form = e.target;
+    // 2. إرسال البيانات لـ Formspree لإيميلك الشخصي
     const data = new FormData(form);
     
     fetch(form.action, {
@@ -939,18 +947,17 @@ document.querySelector('form').addEventListener('submit', function (e) {
         headers: { 'Accept': 'application/json' }
     }).then(response => {
         if (response.ok) {
-            // إظهار رسالة النجاح في الموقع
+            // إظهار رسالة النجاح وتفريغ الفورم
             const successBox = document.getElementById('successBox');
             if (successBox) successBox.classList.add('show');
-            form.reset(); // تفريغ الحقول
+            form.reset();
         } else {
-            alert('حاول مرة أخرى، حدث خطأ في الإرسال.');
+            alert('حدث خطأ من السيرفر، حاول مرة أخرى.');
         }
-    }).catch(error => {
-        alert('فشل الاتصال بالإنترنت.');
+    }).catch(() => {
+        alert('فشل الاتصال بالإنترنت، تحقق من اتصالك.');
     });
 });
-</script>End of Tawk.to Script-->
-
+</script>
 </body>
 </html>
