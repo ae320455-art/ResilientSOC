@@ -915,17 +915,16 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
-  <script>
+ <script>
 document.querySelector('form').addEventListener('submit', function (e) {
-    // جمع البيانات من الفورم
     const name = document.getElementById('fname').value;
     const email = document.getElementById('femail').value;
     const service = document.getElementById('fservice').value;
     const message = document.getElementById('fmessage').value;
 
-    // إرسال الإشعار لتطبيق ntfy مباشرة (نفس اسم التوبيك اللي عملناه)
     fetch('https://ntfy.sh/res_soc_alerts', {
         method: 'POST',
+        keepalive: true,
         body: `رسالة جديدة من الموقع!\nالاسم: ${name}\nالإيميل: ${email}\nالخدمة: ${service}\nالرسالة: ${message}`
     });
 });
