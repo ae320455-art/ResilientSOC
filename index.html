@@ -888,16 +888,7 @@ team.forEach(t => {
   teamGrid.appendChild(el);
 });
 
-// ---------- Contact form ----------
-const form = document.getElementById('contactForm');
-const successBox = document.getElementById('successBox');
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  if (!form.checkValidity()) { form.reportValidity(); return; }
-  // Placeholder integration point: no backend is connected yet.
-  form.style.display = 'none';
-  successBox.classList.add('show');
-});
+
 
 // ---------- Scroll reveal ----------
 const revealEls = document.querySelectorAll('.reveal');
